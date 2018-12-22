@@ -19,7 +19,6 @@ public class MainWindowController implements Initializable{
 			{'s','-','-','7'},
 			{' ',' ',' ','|'},
 			{' ','r','-','J'},
-			{' ','L','-','7'},
 			{' ','L','-','g'}
 	};
 	
