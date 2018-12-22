@@ -41,8 +41,8 @@ public class MainWindowController implements Initializable{
 	private StringWriter inputFromServer = new StringWriter();
 	
 	private int port = 6100;
-	private String ip = "127.0.0.1";
-//	private String ip = "10.0.0.3";
+	//private String ip = "127.0.0.1";
+	private String ip = "10.0.0.3";
 	
 	private Date startTime, submitTime;
 	private Integer stepsCounter = 0;
