@@ -185,7 +185,7 @@ public class MainWindowController implements Initializable{
 		FileChooser fc = new FileChooser();
 		
 		fc.setTitle("choose file");
-		fc.setInitialDirectory(new File("./reasources"));
+		fc.setInitialDirectory(new File("./resources/Pipes"));
 
 		File chosen = fc.showOpenDialog(null);
 		if (chosen != null)
@@ -194,6 +194,10 @@ public class MainWindowController implements Initializable{
 		}
 	}
 
+	private void loadXMLtoLevel()
+	{
+		
+	}
 	public void SaveLevel()
 	{
 		
