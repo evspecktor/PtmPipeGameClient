@@ -9,23 +9,23 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+
 <?import view.PipeGameDisplayer?>
 
-
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="view.MainWindowController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Load Level" />
-                  <MenuItem mnemonicParsing="false" text="Save Level" />
-                  <MenuItem mnemonicParsing="false" text="Server Configuration" />
+              <MenuItem mnemonicParsing="false" onAction="#LoadLevel" text="Load Level" />
+                  <MenuItem mnemonicParsing="false" onAction="#SaveLevel" text="Save Level" />
+                  <MenuItem mnemonicParsing="false" onAction="#LoadServerConfiguration" text="Server Configuration" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Choose Theme..." />
+              <MenuItem mnemonicParsing="false" onAction="#ChooseTheme" text="Choose Theme..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -45,13 +45,12 @@
          <children>
             <HBox>
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" text="Top 10" textAlignment="CENTER" />
-                  <Button mnemonicParsing="false" text="Solve" />
-                  <Button mnemonicParsing="false" text="Submit" />
+                  <Button mnemonicParsing="false" onAction="#Solve" text="Solve" />
+                  <Button mnemonicParsing="false" onAction="#Submit" text="Submit" />
                </children>
             </HBox>
-            <Label text="Timer:" />
-            <Label text="Steps:" />
+            <Label fx:id="timerLabel" text="Timer:" />
+            <Label fx:id="stepsLabel" text="Steps:" />
          </children>
       </VBox>
    </bottom>
