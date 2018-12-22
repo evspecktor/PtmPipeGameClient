@@ -44,6 +44,9 @@ public class PipeGameDisplayer extends Canvas{
 	        }
 	        s += "\n";
 	    }
+	    s += "done";
+	    
+	    System.out.println("string to server: " + s.toString());
 	    return s.toString();
 	}
 	

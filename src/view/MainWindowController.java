@@ -36,6 +36,7 @@ public class MainWindowController implements Initializable{
 	@FXML
 	private Label timerLabel;
 	
+	private String inputFromServer = "";
 	
 	private int port = 6100;
 	
@@ -44,16 +45,25 @@ public class MainWindowController implements Initializable{
 	
 	public void handleServerSolution(String s) throws InterruptedException
 	{
-		String[] splited = s.split(",");
-		int x = Integer.parseInt(splited[0]);
-		int y = Integer.parseInt(splited[1]);
-		int rotationCount = Integer.parseInt(splited[2]);
-		
-		for (int i = 0; i < rotationCount; i ++)
+		if(s != null)
 		{
-			pipesRotation(x,y);
-			Thread.sleep(10);
+			if (s.equals("done"))
+			{
+				System.out.println("WOHOOOO! :) ");
+				return;
+			}
+			String[] splited = s.split(",");
+			int x = Integer.parseInt(splited[0]);
+			int y = Integer.parseInt(splited[1]);
+			int rotationCount = Integer.parseInt(splited[2]);
+			
+			for (int i = 0; i < rotationCount; i ++)
+			{
+				pipesRotation(x,y);
+				Thread.sleep(10);
+			}
 		}
+		System.out.println("Server sent null");
 	}
 	
 	@Override
@@ -166,17 +176,24 @@ public class MainWindowController implements Initializable{
 		
 	}
 	
-	public void Submit()
+	public void Submit() throws InterruptedException
 	{
 		submitTime = new Date();
 		long difference = submitTime.getTime() - startTime.getTime();
 		timerLabel.setText("Timer: " + difference/1000 + " seconds");
-		Communication.start(pipeDisplayer.covertGameToString(),"127.0.0.1", port);
+		
+		Communication.start(pipeDisplayer.covertGameToString(),"10.0.0.3", port);
+		if (inputFromServer.equals("done"))
+		{
+			System.out.println("WOHOOOO! :) ");
+			return;
+		}
 	}
 	
-	public void Solve()
+	public void Solve() throws InterruptedException
 	{
-		
+		Communication.start(pipeDisplayer.covertGameToString(),"10.0.0.3", port);
+		handleServerSolution(inputFromServer);
 	}
 	
 }
