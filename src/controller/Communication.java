@@ -56,7 +56,7 @@ public class Communication {
 		StringWriter output = new StringWriter();
 		Communication.start("s|L\n  g\ndone",output,"127.0.0.1",6100);
 		System.out.println("output: " + output +"!");
-		String st = "p,h,l\np,h,q\n"
+	//	String st = "p,h,l\np,h,q\n"
 	}
 	
 	
