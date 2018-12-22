@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 public class PipeGameDisplayer extends Canvas{
 	
 	char[][] pipeBoard;
-	char[][] pipeBoardChars;
+	public StringBuilder pipeBoardToSend;
 	
 	int cCol,cRow;
 	int x,y;
@@ -35,6 +35,17 @@ public class PipeGameDisplayer extends Canvas{
 		cRow = 1; 
 	}
 	
+	public String covertGameToString()
+	{
+	    String s = "";
+	    for (int i=0; i < pipeBoard.length; i++) {
+	        for (int j=0; j < pipeBoard[i].length; j++) {
+	            s += pipeBoard[i][j];
+	        }
+	        s += "\n";
+	    }
+	    return s.toString();
+	}
 	
 	public char getPipe(int x, int y) {
 		System.out.println("get pipe x: " + x + " y: " + y);
@@ -44,6 +55,11 @@ public class PipeGameDisplayer extends Canvas{
 		return pipeBoard[x][y];
 	}
 	
+	public char[][] getPipeBoard()
+	{
+		return pipeBoard;
+		
+	}
 	
 	public int getcRow() {
 		return cRow;
@@ -142,10 +158,6 @@ public class PipeGameDisplayer extends Canvas{
 	}
 
 
-	public char[][] getPipeBoard() {
-		return pipeBoard;
-	}
-
 	public void setPipeBoard(char[][] pipeData) {
 		this.pipeBoard = pipeData;
 		redraw();
@@ -199,7 +211,6 @@ public class PipeGameDisplayer extends Canvas{
 				System.out.println("1");
 				System.out.println(picFileName.get()+pipes.get());
 				pics = new Image(new FileInputStream(picFileName.get()+pipes.get()));
-
 				System.out.println("2");
 				picg = new Image(new FileInputStream(picFileName.get()+pipeg.get()));				
 				System.out.println("3");

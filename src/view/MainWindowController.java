@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import controller.Communication;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,6 +35,9 @@ public class MainWindowController implements Initializable{
 	private Label stepsLabel;
 	@FXML
 	private Label timerLabel;
+	
+	
+	private int port = 6100;
 	
 	private Date startTime, submitTime;
 	private Integer stepsCounter = 0;
@@ -167,6 +171,7 @@ public class MainWindowController implements Initializable{
 		submitTime = new Date();
 		long difference = submitTime.getTime() - startTime.getTime();
 		timerLabel.setText("Timer: " + difference/1000 + " seconds");
+		Communication.start(pipeDisplayer.covertGameToString(),"127.0.0.1", port);
 	}
 	
 	public void Solve()
