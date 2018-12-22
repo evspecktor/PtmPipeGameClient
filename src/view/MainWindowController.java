@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -24,9 +25,22 @@ public class MainWindowController implements Initializable{
 	
 	@FXML
 	PipeGameDisplayer pipeDisplayer;
+	@FXML
+	private Label stepsLabel;
+	
+	private Integer stepsCounter = 0;
+	
+	private void setStepsCounter()
+	{
+		stepsCounter++;
+		stepsLabel.setText("Steps: " + stepsCounter);
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		stepsLabel.setText("Steps: " + stepsCounter);
+		
 		pipeDisplayer.setPipeBoard(pipeData);
 		
 		pipeDisplayer.addEventFilter(MouseEvent.MOUSE_CLICKED, (e)->pipeDisplayer.requestFocus());
@@ -50,23 +64,26 @@ public class MainWindowController implements Initializable{
 				switch (PipeType) {
 				case 's':
 					pipeDisplayer.pipeBoard[x][y] = 's';
-					pipeDisplayer.redraw();
 					break;
 				case 'L':
 					pipeDisplayer.pipeBoard[x][y] = 'r';
 					pipeDisplayer.redraw();
+					setStepsCounter();
 					break;
 				case 'r':
 					pipeDisplayer.pipeBoard[x][y] = '7';
 					pipeDisplayer.redraw();
+					setStepsCounter();
 					break;
 				case '7':
 					pipeDisplayer.pipeBoard[x][y] = 'J';
 					pipeDisplayer.redraw();
+					setStepsCounter();
 					break;
 				case 'J':
 					pipeDisplayer.pipeBoard[x][y] = 'L';
 					pipeDisplayer.redraw();
+					setStepsCounter();
 					break;
 				case 'g':
 					pipeDisplayer.pipeBoard[x][y] = 'g';
@@ -74,10 +91,12 @@ public class MainWindowController implements Initializable{
 				case '-':
 					pipeDisplayer.pipeBoard[x][y] = '|';
 					pipeDisplayer.redraw();
+					setStepsCounter();
 					break;	
 				case '|':
 					pipeDisplayer.pipeBoard[x][y] = '-';
 					pipeDisplayer.redraw();
+					setStepsCounter();
 					break;		
 				default:
 					break;

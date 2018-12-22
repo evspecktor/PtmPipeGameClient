@@ -51,7 +51,7 @@
                </children>
             </HBox>
             <Label text="Timer:" />
-            <Label text="Steps:" />
+            <Label fx:id="stepsLabel" text="Steps:" />
          </children>
       </VBox>
    </bottom>
