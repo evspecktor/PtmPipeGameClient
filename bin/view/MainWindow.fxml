@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import view.PipeGameDisplayer?>
+
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="view.MainWindowController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Load Level" />
+                  <MenuItem mnemonicParsing="false" text="Save Level" />
+                  <MenuItem mnemonicParsing="false" text="Server Configuration" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Choose Theme..." />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <!-- Canvas height="200.0" width="245.0" BorderPane.alignment="CENTER" /> -->
+      <PipeGameDisplayer fx:id="pipeDisplayer" height="200.0" width="200.0" BorderPane.alignment="CENTER" picFileName="./resources/Pipes/" pipes="pipes.jpg" pipeg="pipeg.jpg" pipe1="pipe1.jpg" pipe0="pipe0.jpg" pipe7="pipe7.jpg" pipeL="pipeL.jpg" pipeJ="pipeJ.jpg" piper="piper.jpg"/>
+   </center>
+   <bottom>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox>
+               <children>
+                  <Button alignment="CENTER" mnemonicParsing="false" text="Top 10" textAlignment="CENTER" />
+                  <Button mnemonicParsing="false" text="Solve" />
+                  <Button mnemonicParsing="false" text="Submit" />
+               </children>
+            </HBox>
+            <Label text="Timer:" />
+            <Label text="Steps:" />
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>
