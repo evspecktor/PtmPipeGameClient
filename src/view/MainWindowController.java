@@ -2,6 +2,11 @@ package view;
 
 import java.io.File;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;  
+
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
@@ -27,18 +32,17 @@ public class MainWindowController implements Initializable{
 	PipeGameDisplayer pipeDisplayer;
 	@FXML
 	private Label stepsLabel;
+	@FXML
+	private Label timerLabel;
 	
+	private Date startTime, submitTime;
 	private Integer stepsCounter = 0;
-	
-	private void setStepsCounter()
-	{
-		stepsCounter++;
-		stepsLabel.setText("Steps: " + stepsCounter);
-	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
+		startTime = new Date();
+		timerLabel.setText("Timer: ");
 		stepsLabel.setText("Steps: " + stepsCounter);
 		
 		pipeDisplayer.setPipeBoard(pipeData);
@@ -108,7 +112,12 @@ public class MainWindowController implements Initializable{
 	
 	
 	
-	
+	private void setStepsCounter()
+	{
+		stepsCounter++;
+		stepsLabel.setText("Steps: " + stepsCounter);
+	}
+
 	public void LoadLevel()
 	{
 		FileChooser fc = new FileChooser();
@@ -140,7 +149,9 @@ public class MainWindowController implements Initializable{
 	
 	public void Submit()
 	{
-		
+		submitTime = new Date();
+		long difference = submitTime.getTime() - startTime.getTime();
+		timerLabel.setText("Timer: " + difference/1000 + " seconds");
 	}
 	
 	public void Solve()
