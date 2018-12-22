@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 public class PipeGameDisplayer extends Canvas{
 	
 	char[][] pipeBoard;
-	char[][] pipeBoardChars;
+	public StringBuilder pipeBoardToSend;
 	
 	int cCol,cRow;
 	int x,y;
@@ -27,7 +27,7 @@ public class PipeGameDisplayer extends Canvas{
 		pipe7 = new SimpleStringProperty();
 		pipeL = new SimpleStringProperty();
 		pipeJ = new SimpleStringProperty();
-		piper = new SimpleStringProperty();
+		pipeF = new SimpleStringProperty();
 		pipe0 = new SimpleStringProperty();
 		pipe1 = new SimpleStringProperty();
 		
@@ -35,6 +35,20 @@ public class PipeGameDisplayer extends Canvas{
 		cRow = 1; 
 	}
 	
+	public String covertGameToString()
+	{
+	    String s = "";
+	    for (int i=0; i < pipeBoard.length; i++) {
+	        for (int j=0; j < pipeBoard[i].length; j++) {
+	            s += pipeBoard[i][j];
+	        }
+	        s += "\n";
+	    }
+	    s += "done";
+	    
+	    System.out.println("string to server: " + s.toString());
+	    return s.toString();
+	}
 	
 	public char getPipe(int x, int y) {
 		System.out.println("get pipe x: " + x + " y: " + y);
@@ -44,6 +58,11 @@ public class PipeGameDisplayer extends Canvas{
 		return pipeBoard[x][y];
 	}
 	
+	public char[][] getPipeBoard()
+	{
+		return pipeBoard;
+		
+	}
 	
 	public int getcRow() {
 		return cRow;
@@ -65,7 +84,7 @@ public class PipeGameDisplayer extends Canvas{
 	private StringProperty pipe7;
 	private StringProperty pipeJ;
 	private StringProperty pipeL;
-	private StringProperty piper;
+	private StringProperty pipeF;
 	private StringProperty pipe0;
 	private StringProperty pipe1;
 
@@ -94,12 +113,12 @@ public class PipeGameDisplayer extends Canvas{
 		this.pipeL.set(pipeg);
 	}
 	
-	public String getPiper() {
-		return piper.get();
+	public String getPipeF() {
+		return pipeF.get();
 	}
 
-	public void setPiper(String pipeg) {
-		this.piper.set(pipeg);
+	public void setPipeF(String pipeg) {
+		this.pipeF.set(pipeg);
 	}
 	
 	public String getPipe0() {
@@ -141,10 +160,6 @@ public class PipeGameDisplayer extends Canvas{
 		this.picFileName.set(picFileName);
 	}
 
-
-	public char[][] getPipeBoard() {
-		return pipeBoard;
-	}
 
 	public void setPipeBoard(char[][] pipeData) {
 		this.pipeBoard = pipeData;
@@ -193,13 +208,12 @@ public class PipeGameDisplayer extends Canvas{
 			Image picL = null;
 			Image picJ = null;
 			Image pic7 = null;
-			Image picr = null;
+			Image picF = null;
 
 			try {
 				System.out.println("1");
 				System.out.println(picFileName.get()+pipes.get());
 				pics = new Image(new FileInputStream(picFileName.get()+pipes.get()));
-
 				System.out.println("2");
 				picg = new Image(new FileInputStream(picFileName.get()+pipeg.get()));				
 				System.out.println("3");
@@ -210,7 +224,7 @@ public class PipeGameDisplayer extends Canvas{
 				picL = new Image(new FileInputStream(picFileName.get()+pipeL.get()));
 				picJ = new Image(new FileInputStream(picFileName.get()+pipeJ.get()));
 				pic7 = new Image(new FileInputStream(picFileName.get()+pipe7.get()));
-				picr = new Image(new FileInputStream(picFileName.get()+piper.get()));
+				picF = new Image(new FileInputStream(picFileName.get()+pipeF.get()));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -300,14 +314,14 @@ public class PipeGameDisplayer extends Canvas{
 							gc.drawImage(picJ, w*j, h*i, w, h); 
 						}
 						break;
-					case 'r':
-						if (picr == null)
+					case 'F':
+						if (picF == null)
 						{
 							gc.fillRect(w*j, h*i, w, h);
 						}
 						else
 						{
-							gc.drawImage(picr, w*j, h*i, w, h); 
+							gc.drawImage(picF, w*j, h*i, w, h); 
 						}
 						break;
 
