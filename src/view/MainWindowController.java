@@ -1,6 +1,9 @@
 package view;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -40,8 +43,8 @@ public class MainWindowController implements Initializable{
 	private StringWriter inputFromServer = new StringWriter();
 	
 	private int port = 6100;
-	//private String ip = "127.0.0.1";
-	private String ip = "10.0.0.3";
+	private String ip = "127.0.0.1";
+//	private String ip = "10.0.0.3";
 	
 	private Date startTime, submitTime;
 	private Integer stepsCounter = 0;
@@ -55,50 +58,30 @@ public class MainWindowController implements Initializable{
 				System.out.println("WOHOOOO! :) ");
 				return;
 			}
-			System.out.println("solve me!!" + s + "!");
-			String[] line = s.split("\n");
-			String[] splited;
-		
-			//for each line, do rotation
-			for (String string : line) {
-				System.out.println("line:" + string+"!");
-				
-				if (string.equals("done\n"))
-				{
-					System.out.println("done!!");
-					break;
-				}
-				splited = string.split(",");
-				
-				System.out.println("x :" + splited[0] + "!");
-				System.out.println("y :" + splited[1] + "!");
-				System.out.println("rotationCount :" + splited[2] + "!");
-				
-				int x = Integer.parseInt(splited[0]);
-				int y = Integer.parseInt(splited[1]);
-				int rotationCount = Integer.parseInt(splited[2]);
-				
-				System.out.println("x : " + x);
-				System.out.println("y : " + y);
-				System.out.println("rotationCount : " + rotationCount);
-				
-				
-				for (int i = 0; i < rotationCount-1; i ++)
-				{
-					System.out.println("i: " + i );
-					pipesRotation(y,x);
-					Thread.sleep(10);
-				}
-		
-				
-			}
 			
-			
+			BufferedReader bufReader = new BufferedReader(new StringReader(s));
+			String line;
+			try {
+				while( !(line=bufReader.readLine()).equals("done"))
+				{	
+					int x = Integer.parseInt(line.split(",")[0]);
+					int y = Integer.parseInt(line.split(",")[1]);
+					int rotationCount = Integer.parseInt(line.split(",")[2]);
+										
+					for (int i = 0; i < rotationCount-1; i ++)
+					{
+						System.out.println("i: " + i );
+						pipesRotation(y,x);
+						Thread.sleep(10);
+					}
 			
 				}
-		System.out.println("Server sent null");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
 	}
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
