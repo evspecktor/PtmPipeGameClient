@@ -38,6 +38,20 @@ public class MainWindowController implements Initializable{
 	private Date startTime, submitTime;
 	private Integer stepsCounter = 0;
 	
+	public void handleServerSolution(String s) throws InterruptedException
+	{
+		String[] splited = s.split(",");
+		int x = Integer.parseInt(splited[0]);
+		int y = Integer.parseInt(splited[1]);
+		int rotationCount = Integer.parseInt(splited[2]);
+		
+		for (int i = 0; i < rotationCount; i ++)
+		{
+			pipesRotation(x,y);
+			Thread.sleep(10);
+		}
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -59,58 +73,59 @@ public class MainWindowController implements Initializable{
 				y = y / (int)pipeDisplayer.getw(); 
 				x = x / (int)pipeDisplayer.geth();
 				
-				System.out.println("x: " + x + "y: " + y);
-				
-				char PipeType = pipeDisplayer.getPipe(x, y);
-				
-				System.out.println("PipeType: " + PipeType);
-				
-				switch (PipeType) {
-				case 's':
-					pipeDisplayer.pipeBoard[x][y] = 's';
-					break;
-				case 'L':
-					pipeDisplayer.pipeBoard[x][y] = 'r';
-					pipeDisplayer.redraw();
-					setStepsCounter();
-					break;
-				case 'r':
-					pipeDisplayer.pipeBoard[x][y] = '7';
-					pipeDisplayer.redraw();
-					setStepsCounter();
-					break;
-				case '7':
-					pipeDisplayer.pipeBoard[x][y] = 'J';
-					pipeDisplayer.redraw();
-					setStepsCounter();
-					break;
-				case 'J':
-					pipeDisplayer.pipeBoard[x][y] = 'L';
-					pipeDisplayer.redraw();
-					setStepsCounter();
-					break;
-				case 'g':
-					pipeDisplayer.pipeBoard[x][y] = 'g';
-					break;
-				case '-':
-					pipeDisplayer.pipeBoard[x][y] = '|';
-					pipeDisplayer.redraw();
-					setStepsCounter();
-					break;	
-				case '|':
-					pipeDisplayer.pipeBoard[x][y] = '-';
-					pipeDisplayer.redraw();
-					setStepsCounter();
-					break;		
-				default:
-					break;
-			}
-		
-		}
+				pipesRotation(x, y);
+				}
 	});
 }
 	
 	
+	private void pipesRotation(int x, int y)
+	{
+		char PipeType = pipeDisplayer.getPipe(x, y);
+		
+		switch (PipeType) {
+		case 's':
+			pipeDisplayer.pipeBoard[x][y] = 's';
+			break;
+		case 'L':
+			pipeDisplayer.pipeBoard[x][y] = 'r';
+			pipeDisplayer.redraw();
+			setStepsCounter();
+			break;
+		case 'r':
+			pipeDisplayer.pipeBoard[x][y] = '7';
+			pipeDisplayer.redraw();
+			setStepsCounter();
+			break;
+		case '7':
+			pipeDisplayer.pipeBoard[x][y] = 'J';
+			pipeDisplayer.redraw();
+			setStepsCounter();
+			break;
+		case 'J':
+			pipeDisplayer.pipeBoard[x][y] = 'L';
+			pipeDisplayer.redraw();
+			setStepsCounter();
+			break;
+		case 'g':
+			pipeDisplayer.pipeBoard[x][y] = 'g';
+			break;
+		case '-':
+			pipeDisplayer.pipeBoard[x][y] = '|';
+			pipeDisplayer.redraw();
+			setStepsCounter();
+			break;	
+		case '|':
+			pipeDisplayer.pipeBoard[x][y] = '-';
+			pipeDisplayer.redraw();
+			setStepsCounter();
+			break;		
+		default:
+			break;
+	}
+
+
+	}
 	
 	private void setStepsCounter()
 	{
