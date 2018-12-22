@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +29,7 @@ public class Communication {
 		catch (IOException e) { e.printStackTrace();} 
 		} 
 	
-	public static void start(String inputData,String outPutData,String ip, int port){ 
+	public static void start(String inputData,StringWriter outPutData,String ip, int port){ 
 		try { 
 			Socket theServer=new Socket(ip, port); 
 			System.out.println("connected to server");
@@ -52,9 +53,10 @@ public class Communication {
 	}
 	
 	public static void main(String args[]) throws UnknownHostException{
-		String output ="";
-		Communication.start("s|L\n  g\ndone",output,"127.0.0.1",6456);
-		System.out.println("output: " + output);
+		StringWriter output = new StringWriter();
+		Communication.start("s|L\n  g\ndone",output,"127.0.0.1",6100);
+		System.out.println("output: " + output +"!");
+		String st = "p,h,l\np,h,q\n"
 	}
 	
 	
