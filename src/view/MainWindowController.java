@@ -159,19 +159,5 @@ public class MainWindowController implements Initializable{
 		
 	}
 	
-	public void Top10()
-	{
-		
-	}
-	
-	public void Timer()
-	{
-		
-	}
-	
-	public void Steps()
-	{
-		
-	}
 }
 		
