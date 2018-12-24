@@ -2,14 +2,13 @@ package view;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;  
-
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -18,8 +17,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 
@@ -32,6 +29,7 @@ public class MainWindowController implements Initializable{
 			{' ','F','-','J'},
 			{' ','L','-','g'}
 	};
+	
 	
 	@FXML
 	PipeGameDisplayer pipeDisplayer;
@@ -49,39 +47,6 @@ public class MainWindowController implements Initializable{
 	private Date startTime, submitTime;
 	private Integer stepsCounter = 0;
 	
-	public void handleServerSolution(String s) throws InterruptedException
-	{
-		if(s != null)
-		{
-			if (s.equals("done"))
-			{
-				System.out.println("WOHOOOO! :) ");
-				return;
-			}
-			
-			BufferedReader bufReader = new BufferedReader(new StringReader(s));
-			String line;
-			try {
-				while( !(line=bufReader.readLine()).equals("done"))
-				{	
-					int x = Integer.parseInt(line.split(",")[0]);
-					int y = Integer.parseInt(line.split(",")[1]);
-					int rotationCount = Integer.parseInt(line.split(",")[2]);
-										
-					for (int i = 0; i < rotationCount-1; i ++)
-					{
-						System.out.println("i: " + i );
-						pipesRotation(y,x);
-						Thread.sleep(10);
-					}
-			
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-		}
-	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -157,26 +122,88 @@ public class MainWindowController implements Initializable{
 
 	}
 	
+	private void handleServerSolution(String s) throws InterruptedException
+	{
+		if(s != null)
+		{
+			if (s.equals("done"))
+			{
+				System.out.println("WOHOOOO! :) ");
+				return;
+			}
+			
+			BufferedReader bufReader = new BufferedReader(new StringReader(s));
+			String line;
+			try {
+				while( !(line=bufReader.readLine()).equals("done"))
+				{	
+					int x = Integer.parseInt(line.split(",")[0]);
+					int y = Integer.parseInt(line.split(",")[1]);
+					int rotationCount = Integer.parseInt(line.split(",")[2]);
+										
+					for (int i = 0; i < rotationCount-1; i ++)
+					{
+						System.out.println("i: " + i );
+						pipesRotation(y,x);
+						Thread.sleep(10);
+					}
+			
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
+	}
+
+	private void setStepsCounter(int x)
+	{
+		stepsCounter = x;
+		stepsLabel.setText("Steps: " + stepsCounter);
+	}
+	
 	private void setStepsCounter()
 	{
 		stepsCounter++;
 		stepsLabel.setText("Steps: " + stepsCounter);
 	}
 
-	public void LoadLevel()
+	public void LoadLevel() throws IOException
 	{
 		FileChooser fc = new FileChooser();
 		
 		fc.setTitle("choose file");
-		fc.setInitialDirectory(new File("./reasources"));
+		fc.setInitialDirectory(new File("./resources"));
 
 		File chosen = fc.showOpenDialog(null);
 		if (chosen != null)
 		{
-			System.out.println(chosen.getName());
+			InputStream is = new FileInputStream(chosen); 
+			BufferedReader buf = new BufferedReader(new InputStreamReader(is)); 
+			String line = buf.readLine(); 
+			int i =0;
+			while(line != null)
+			{ 
+				if ( line.startsWith("Steps"))
+				{
+					int counter = Integer.parseInt(line.substring(7));
+					setStepsCounter(counter);
+				}
+				
+				pipeData[i] = line.toCharArray(); 
+				line = buf.readLine();
+				i++;
+			} 
+			
+			//need to set pipes into array (there is a code like that in the server) OR create model, serealize to XML all the data and load it
+			//char[][] pipeDataLoaded = char[][]
+			
+
+			pipeDisplayer.setPipeBoard(pipeData);
 		}
 	}
-
+	
+	
 	public void SaveLevel()
 	{
 		
