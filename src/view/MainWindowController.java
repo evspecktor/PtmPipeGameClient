@@ -189,8 +189,8 @@ public class MainWindowController implements Initializable{
 	private void setTime()
 	{
 		submitTime = new Date();
-		long difference = submitTime.getTime() - startTime.getTime();
-		timerLabel.setText("Timer: " + difference/1000 + " seconds");
+		gameModel.setTime(submitTime.getTime() - startTime.getTime()); 
+		timerLabel.setText("Timer: " + gameModel.getTime()/1000 + " seconds");
 	}
 	
 	private void setTime(long durationTime)
