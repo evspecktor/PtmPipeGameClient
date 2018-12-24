@@ -18,9 +18,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+              <MenuItem mnemonicParsing="false" onAction="#LoadLevelFromTxt" text="Load Level From txt" />
               <MenuItem mnemonicParsing="false" onAction="#LoadLevel" text="Load Level" />
-                  <MenuItem mnemonicParsing="false" onAction="#SaveLevel" text="Save Level" />
-                  <MenuItem mnemonicParsing="false" onAction="#LoadServerConfiguration" text="Load Server Configuration" />
+              <MenuItem mnemonicParsing="false" onAction="#SaveLevel" text="Save Level" />
+              <MenuItem mnemonicParsing="false" onAction="#LoadServerConfiguration" text="Load Server Configuration" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

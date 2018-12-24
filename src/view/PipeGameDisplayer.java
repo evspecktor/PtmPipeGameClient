@@ -60,8 +60,6 @@ public class PipeGameDisplayer extends Canvas{
 	public char getPipe(int x, int y) {
 		System.out.println("get pipe x: " + x + " y: " + y);
 		System.out.println(pipeBoard);
-		System.out.println("in Get" + pipeBoard[y][x]);
-		System.out.println("in Get" + pipeBoard[x][y]);
 		return pipeBoard[x][y];
 	}
 	

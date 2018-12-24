@@ -48,6 +48,10 @@ public class clientGameModel implements Serializable{
 	public void setStepsCounter(Integer stepsCounter) {
 		this.stepsCounter = stepsCounter;
 	}
+	
+	public void setStepsCounter() {
+		this.stepsCounter++;
+	}
 
 	public int getX() {
 		return x;

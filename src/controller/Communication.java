@@ -66,9 +66,9 @@ public class Communication {
 		long timePassed = 10;
 		int steps = 15;
 		char[][] pipeBoard = {
-				{'s','-','-','7'},
-				{' ',' ',' ','|'},
-				{' ','F','-','J'},
+				{'s','-','-','-'},
+				{' ',' ',' ','-'},
+				{' ','F','-','-'},
 				{' ','L','-','g'}
 		};
 		
