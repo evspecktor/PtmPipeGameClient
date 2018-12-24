@@ -3,9 +3,13 @@ package view;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -52,14 +56,13 @@ public class MainWindowController implements Initializable{
 	ConfigParser CP = null;
 	
 	private Date startTime, submitTime;
-	private Integer stepsCounter = 0;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		startTime = new Date();
 		timerLabel.setText("Timer: ");
-		stepsLabel.setText("Steps: " + stepsCounter);
+		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
 		
 		pipeDisplayer.setPipeBoard(gameModel.getPipeBoard());
 		
@@ -163,19 +166,40 @@ public class MainWindowController implements Initializable{
 		}
 	}
 
-	private void setStepsCounter(int x)
-	{
-		stepsCounter = x;
-		stepsLabel.setText("Steps: " + stepsCounter);
-	}
-	
 	private void setStepsCounter()
 	{
-		stepsCounter++;
-		stepsLabel.setText("Steps: " + stepsCounter);
+		gameModel.setStepsCounter();
+		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
+	}
+	
+	private void setStepsCounter(int x)
+	{
+		gameModel.setStepsCounter(x);
+		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
+	}
+	
+	private void redrawAllGame(int stepsCounter, long Time, char[][] pipeGame)
+	{
+		System.out.println("redrawAllGame - stepsCounter = " + stepsCounter + "Time = " + Time );
+		setStepsCounter(stepsCounter);
+		setTime(Time);
+		pipeDisplayer.setPipeBoard(pipeGame);
+	}
+	
+	private void setTime()
+	{
+		submitTime = new Date();
+		long difference = submitTime.getTime() - startTime.getTime();
+		timerLabel.setText("Timer: " + difference/1000 + " seconds");
+	}
+	
+	private void setTime(long durationTime)
+	{
+		gameModel.setTime(durationTime);
+		timerLabel.setText("Timer: " + durationTime/1000 + " seconds");
 	}
 
-	public void LoadLevel() throws IOException
+	public void LoadLevelFromTxt() throws IOException
 	{
 		FileChooser fc = new FileChooser();
 		
@@ -246,7 +270,6 @@ public class MainWindowController implements Initializable{
 				
 				}
 					System.out.println("---set Pipes Into Array Done---");
-			
 			}
 		}
 		return pipes;
@@ -254,7 +277,38 @@ public class MainWindowController implements Initializable{
 
 	public void SaveLevel()
 	{
+		try {
+	         FileOutputStream fileOut = new FileOutputStream("./resources/cgm.ser");
+	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	         out.writeObject(gameModel);
+	         out.close();
+	         fileOut.close();
+	         System.out.printf("Serialized data is saved in ./resources/cgm.ser");
+	      } catch (IOException i) {
+	         i.printStackTrace();
+	      }
+	}
+	
+	public void LoadLevel() throws IOException, ClassNotFoundException
+	{
 		
+		gameModel = null;
+		FileChooser fc = new FileChooser();
+		
+		fc.setTitle("choose file");
+		fc.setInitialDirectory(new File("./resources"));
+
+		File chosen = fc.showOpenDialog(null);
+		if (chosen != null)
+		{
+			FileInputStream fileIn = new FileInputStream(chosen);
+		    ObjectInputStream in = new ObjectInputStream(fileIn);
+		    gameModel = (clientGameModel) in.readObject();
+		    in.close();
+		    fileIn.close();
+		    			
+			redrawAllGame(gameModel.getStepsCounter(),gameModel.getTime(), gameModel.getPipeBoard());
+		}
 	}
 	
 	public void LoadServerConfiguration() throws ParserConfigurationException, SAXException, IOException
@@ -288,10 +342,7 @@ public class MainWindowController implements Initializable{
 	
 	public void Submit() throws InterruptedException, ParserConfigurationException, SAXException, IOException
 	{
-		submitTime = new Date();
-		long difference = submitTime.getTime() - startTime.getTime();
-		timerLabel.setText("Timer: " + difference/1000 + " seconds");
-		
+		setTime();
 		connectToServer();
 		System.out.println("input from server: " + inputFromServer + "!");
 		if (inputFromServer.toString().equals("done\n"))
