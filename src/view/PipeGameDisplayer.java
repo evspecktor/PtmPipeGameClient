@@ -9,14 +9,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import model.clientGameModel;
 
 public class PipeGameDisplayer extends Canvas{
 	
 	char[][] pipeBoard;
-	public StringBuilder pipeBoardToSend;
-	
-	int cCol,cRow;
 	int x,y;
+	
 	double h,H,W,w;
 	
 	public PipeGameDisplayer()
@@ -30,10 +29,18 @@ public class PipeGameDisplayer extends Canvas{
 		pipeF = new SimpleStringProperty();
 		pipe0 = new SimpleStringProperty();
 		pipe1 = new SimpleStringProperty();
-		
-		cCol = 0;
-		cRow = 1; 
+
 	}
+	
+	private StringProperty picFileName;
+	private StringProperty pipeg;
+	private StringProperty pipes;
+	private StringProperty pipe7;
+	private StringProperty pipeJ;
+	private StringProperty pipeL;
+	private StringProperty pipeF;
+	private StringProperty pipe0;
+	private StringProperty pipe1;
 	
 	public String covertGameToString()
 	{
@@ -64,31 +71,6 @@ public class PipeGameDisplayer extends Canvas{
 		
 	}
 	
-	public int getcRow() {
-		return cRow;
-	}
-	
-	public int getcCol() {
-		return cCol;
-	}
-
-	public void setcPoition(int row, int col) {
-		cRow = row;
-		cCol = col;
-		redraw();
-	}
-
-	private StringProperty picFileName;
-	private StringProperty pipeg;
-	private StringProperty pipes;
-	private StringProperty pipe7;
-	private StringProperty pipeJ;
-	private StringProperty pipeL;
-	private StringProperty pipeF;
-	private StringProperty pipe0;
-	private StringProperty pipe1;
-
-
 	public String getPipeJ() {
 		return pipeJ.get();
 	}
@@ -144,6 +126,7 @@ public class PipeGameDisplayer extends Canvas{
 	public void setPipes(String pipeg) {
 		this.pipes.set(pipeg);
 	}
+	
 	public String getPipeg() {
 		return pipeg.get();
 	}
@@ -160,35 +143,27 @@ public class PipeGameDisplayer extends Canvas{
 		this.picFileName.set(picFileName);
 	}
 
-
 	public void setPipeBoard(char[][] pipeData) {
 		this.pipeBoard = pipeData;
 		redraw();
 	}
 	
-	
-	
 	public double getw() {
 		return w;
 	}
-
 
 	public void setw(double w) {
 		this.w = w;
 	}
 
-
 	public double geth() {
 		return h;
 	}
-
 
 	public void seth(double h) {
 		this.h = h;
 	}
 
-	
-	
 	public void redraw()
 	{
 		if (pipeBoard != null)

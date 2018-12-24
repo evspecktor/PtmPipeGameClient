@@ -20,7 +20,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#LoadLevel" text="Load Level" />
                   <MenuItem mnemonicParsing="false" onAction="#SaveLevel" text="Save Level" />
-                  <MenuItem mnemonicParsing="false" onAction="#LoadServerConfiguration" text="Server Configuration" />
+                  <MenuItem mnemonicParsing="false" onAction="#LoadServerConfiguration" text="Load Server Configuration" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
