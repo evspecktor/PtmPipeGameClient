@@ -50,7 +50,7 @@ public class MainWindowController implements Initializable{
 	@FXML
 	private Label timerLabel;
 	
-	private StringWriter inputFromServer = new StringWriter();
+	private StringWriter inputFromServer = null;
 	
 	
 	ConfigParser CP = null;
@@ -87,6 +87,8 @@ public class MainWindowController implements Initializable{
 	{
 		System.out.println("--inside pipesRotation--");
 		char PipeType = pipeDisplayer.getPipe(x, y);
+		
+		System.out.println("PipeType: " + PipeType);
 		
 		switch (PipeType) {
 		case 's':
@@ -136,25 +138,28 @@ public class MainWindowController implements Initializable{
 	{
 		if(s != null)
 		{
-			if (s.equals("done"))
+			if (s.startsWith("done"))
 			{
 				System.out.println("WOHOOOO! :) ");
 				return;
 			}
 			
+			System.out.println("stam print");
 			BufferedReader bufReader = new BufferedReader(new StringReader(s));
 			String line;
 			try {
 				while( !(line=bufReader.readLine()).equals("done"))
 				{	
+					System.out.println("inside while");
 					int x = Integer.parseInt(line.split(",")[0]);
 					int y = Integer.parseInt(line.split(",")[1]);
 					int rotationCount = Integer.parseInt(line.split(",")[2]);
-										
-					for (int i = 0; i < rotationCount-1; i ++)
+					
+					System.out.println("x: "+ x + "y: " + y + "rotationCount " + rotationCount);
+					for (int i = 0; i < rotationCount; i ++)
 					{
 						System.out.println("i: " + i );
-						pipesRotation(y,x);
+						pipesRotation(x,y);
 						Thread.sleep(10);
 					}
 			
@@ -333,6 +338,7 @@ public class MainWindowController implements Initializable{
 	
 	private void connectToServer() throws ParserConfigurationException, SAXException, IOException
 	{
+		inputFromServer = new StringWriter();
 		if (CP == null)
 		{
 			CP = new ConfigParser();
@@ -344,8 +350,8 @@ public class MainWindowController implements Initializable{
 	{
 		setTime();
 		connectToServer();
-		System.out.println("input from server: " + inputFromServer + "!");
-		if (inputFromServer.toString().equals("done\n"))
+		System.out.println("input from server: " + inputFromServer.toString() + "!");
+		if (inputFromServer.toString().startsWith("done"))
 		{
 			System.out.println("WOHOOOO! :) ");
 			return;
