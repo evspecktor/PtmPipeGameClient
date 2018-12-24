@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class clientGameModel {
+public class clientGameModel implements Serializable{
 
 	private char[][] pipeBoard;	
 	private long time = 0;
