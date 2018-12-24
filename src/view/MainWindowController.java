@@ -202,13 +202,13 @@ public class MainWindowController implements Initializable{
 //				line = buf.readLine();
 //				i++;
 //			} 
-			char[][]
+//			char[][]
 			
 			//need to set pipes into array (there is a code like that in the server) OR create model, serealize to XML all the data and load it
 			//char[][] pipeDataLoaded = char[][]
 			
-			clientGameModel gameModel = new clientGameModel(defaultPipeData);
-			pipeDisplayer.setPipeBoard(pipeData);
+//			clientGameModel gameModel = new clientGameModel(defaultPipeData);
+//			pipeDisplayer.setPipeBoard(pipeData);
 		}
 	}
 	
