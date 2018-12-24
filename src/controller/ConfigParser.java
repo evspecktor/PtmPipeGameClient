@@ -15,17 +15,33 @@ public class ConfigParser {
 	Document doc;
 	String serverIp;
 	int port;
-	
+	private String defaultXmlPath = "./resources/config.xml";
+
+
 	public ConfigParser(String xmlPath) throws ParserConfigurationException, SAXException, IOException
 	{
 		File fXmlFile = new File(xmlPath);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		this.doc = dBuilder.parse(fXmlFile);// TODO Auto-generated constructor stub
+		this.doc = dBuilder.parse(fXmlFile);
+	}
+	
+	public ConfigParser() throws ParserConfigurationException, SAXException, IOException
+	{
+		File fXmlFile = new File(defaultXmlPath);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		this.doc = dBuilder.parse(fXmlFile);
 	}
 
+	public ConfigParser(File xmlFile) throws ParserConfigurationException, SAXException, IOException
+	{
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		this.doc = dBuilder.parse(xmlFile);
+	}
 	
-	String getServerIp() {
+	public String getServerIp() {
 		try {
 			this.serverIp = this.doc.getElementsByTagName("ip").item(0).getTextContent();
 			System.out.println("reading root serverip: " + this.serverIp);
@@ -37,11 +53,10 @@ public class ConfigParser {
 		}
 	}
 
-	int getPort() {
+	public int getPort() {
 		String stport;
 		try {
 			stport = this.doc.getElementsByTagName("port").item(0).getTextContent();
-//			System.out.println("reading root element: " + stport);
 			this.port = Integer.parseInt(stport);
 			System.out.println("reading port : " + this.port);
 			return this.port;

@@ -12,24 +12,33 @@ import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import controller.Communication;
+import controller.ConfigParser;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import model.clientGameModel;
 
 
 public class MainWindowController implements Initializable{
 	
-	char[][] pipeData= {
+	 
+	
+	private char[][] defaultPipeData= {
 			{'s','-','-','7'},
 			{' ',' ',' ','|'},
 			{' ','F','-','J'},
 			{' ','L','-','g'}
 	};
 	
+	clientGameModel gameModel = new clientGameModel(defaultPipeData);
 	
 	@FXML
 	PipeGameDisplayer pipeDisplayer;
@@ -40,9 +49,8 @@ public class MainWindowController implements Initializable{
 	
 	private StringWriter inputFromServer = new StringWriter();
 	
-	private int port = 6100;
-	//private String ip = "127.0.0.1";
-	private String ip = "10.0.0.3";
+	
+	ConfigParser CP = null;
 	
 	private Date startTime, submitTime;
 	private Integer stepsCounter = 0;
@@ -54,7 +62,7 @@ public class MainWindowController implements Initializable{
 		timerLabel.setText("Timer: ");
 		stepsLabel.setText("Steps: " + stepsCounter);
 		
-		pipeDisplayer.setPipeBoard(pipeData);
+		pipeDisplayer.setPipeBoard(gameModel.getPipeBoard());
 		
 		pipeDisplayer.addEventFilter(MouseEvent.MOUSE_CLICKED, (e)->pipeDisplayer.requestFocus());
 		
@@ -182,35 +190,45 @@ public class MainWindowController implements Initializable{
 			BufferedReader buf = new BufferedReader(new InputStreamReader(is)); 
 			String line = buf.readLine(); 
 			int i =0;
-			while(line != null)
-			{ 
-				if ( line.startsWith("Steps"))
-				{
-					int counter = Integer.parseInt(line.substring(7));
-					setStepsCounter(counter);
-				}
-				
-				pipeData[i] = line.toCharArray(); 
-				line = buf.readLine();
-				i++;
-			} 
+//			while(line != null)
+//			{ 
+//				if ( line.startsWith("Steps"))
+//				{
+//					int counter = Integer.parseInt(line.substring(7));
+//					setStepsCounter(counter);
+//				}
+//				
+//				pipeData[i] = line.toCharArray(); 
+//				line = buf.readLine();
+//				i++;
+//			} 
+			char[][]
 			
 			//need to set pipes into array (there is a code like that in the server) OR create model, serealize to XML all the data and load it
 			//char[][] pipeDataLoaded = char[][]
 			
-
+			clientGameModel gameModel = new clientGameModel(defaultPipeData);
 			pipeDisplayer.setPipeBoard(pipeData);
 		}
 	}
-	
 	
 	public void SaveLevel()
 	{
 		
 	}
 	
-	public void LoadServerConfiguration()
+	public void LoadServerConfiguration() throws ParserConfigurationException, SAXException, IOException
 	{
+		FileChooser fc = new FileChooser();
+		
+		fc.setTitle("choose file");
+		fc.setInitialDirectory(new File("./resources"));
+
+		File chosen = fc.showOpenDialog(null);
+		if (chosen != null)
+		{
+			CP = new ConfigParser(chosen);
+		}
 		
 	}
 	
@@ -219,13 +237,22 @@ public class MainWindowController implements Initializable{
 		
 	}
 	
-	public void Submit() throws InterruptedException
+	private void connectToServer() throws ParserConfigurationException, SAXException, IOException
+	{
+		if (CP == null)
+		{
+			CP = new ConfigParser();
+		}
+		Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,CP.getServerIp(), CP.getPort());
+	}
+	
+	public void Submit() throws InterruptedException, ParserConfigurationException, SAXException, IOException
 	{
 		submitTime = new Date();
 		long difference = submitTime.getTime() - startTime.getTime();
 		timerLabel.setText("Timer: " + difference/1000 + " seconds");
 		
-		Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,ip, port);
+		connectToServer();
 		System.out.println("input from server: " + inputFromServer + "!");
 		if (inputFromServer.toString().equals("done\n"))
 		{
@@ -238,9 +265,9 @@ public class MainWindowController implements Initializable{
 		}
 	}
 	
-	public void Solve() throws InterruptedException
+	public void Solve() throws InterruptedException, ParserConfigurationException, SAXException, IOException
 	{
-		Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,ip, port);
+		connectToServer();
 		System.out.println("evg shaming: "+ inputFromServer.toString());
 		handleServerSolution(inputFromServer.toString());
 	}
