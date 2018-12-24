@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -28,8 +29,6 @@ import model.clientGameModel;
 
 
 public class MainWindowController implements Initializable{
-	
-	 
 	
 	private char[][] defaultPipeData= {
 			{'s','-','-','7'},
@@ -188,30 +187,71 @@ public class MainWindowController implements Initializable{
 		{
 			InputStream is = new FileInputStream(chosen); 
 			BufferedReader buf = new BufferedReader(new InputStreamReader(is)); 
-			String line = buf.readLine(); 
-			int i =0;
-//			while(line != null)
-//			{ 
-//				if ( line.startsWith("Steps"))
-//				{
-//					int counter = Integer.parseInt(line.substring(7));
-//					setStepsCounter(counter);
-//				}
-//				
-//				pipeData[i] = line.toCharArray(); 
-//				line = buf.readLine();
-//				i++;
-//			} 
-			char[][]
+
+			gameModel = new clientGameModel(setPipesIntoArray(buf));
 			
-			//need to set pipes into array (there is a code like that in the server) OR create model, serealize to XML all the data and load it
-			//char[][] pipeDataLoaded = char[][]
-			
-			clientGameModel gameModel = new clientGameModel(defaultPipeData);
-			pipeDisplayer.setPipeBoard(pipeData);
+			pipeDisplayer.setPipeBoard(gameModel.getPipeBoard());
 		}
 	}
 	
+	private char[][] setPipesIntoArray(BufferedReader reader) {
+		System.out.println("---set Pipes Into Array---");
+		ArrayList<String> listOfString = new ArrayList<String>();
+		int numOfLines = 0;			
+		
+		try {
+			String line = null;
+			while (( line = reader.readLine()) != null)
+			{
+					
+				numOfLines++;
+				System.out.println("Filling the list of string");
+				listOfString.add(line);
+			}	 
+		} catch (IOException e) {
+			System.out.println("exception?");
+			e.printStackTrace();
+			
+		}
+		System.out.println("!");
+		char[][] pipes = null;
+		int lengthOfLine = 0;
+		if (listOfString != null)
+		{
+			if (listOfString.isEmpty())
+			{
+				System.out.println("client sent empty game");
+			}
+			else
+			{
+				lengthOfLine = listOfString.get(0).length();
+				System.out.println("New array size is: x is :" + lengthOfLine + ", y is: " + (numOfLines)); //numOfLines-1 since done is also a line
+				if (lengthOfLine > 0 && numOfLines > 0)
+				{
+					pipes = new char[lengthOfLine][numOfLines];
+					//listOfString.remove(listOfString.size()-1);
+					int lineNumber = 0;
+					for (String line:listOfString) {
+						for ( int i = 0; i < line.length(); i++)
+						{
+							int x = i; 
+							int y = lineNumber;
+							char p = line.charAt(i);
+							//Pipe pipe = new Pipe(p, x,y);
+							System.out.println("X : " + x + ", Y : " + y + ", Pipe type: " + p);
+							pipes[x][y] = p;
+						}
+						lineNumber++;
+					}
+				
+				}
+					System.out.println("---set Pipes Into Array Done---");
+			
+			}
+		}
+		return pipes;
+	}
+
 	public void SaveLevel()
 	{
 		
