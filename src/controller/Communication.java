@@ -11,6 +11,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 public class Communication {
 	
 	private static void readInputsAndSendTo(BufferedReader in, PrintWriter out,String exitStr){ 
@@ -53,10 +57,22 @@ public class Communication {
 	}
 	
 	public static void main(String args[]) throws UnknownHostException{
-		StringWriter output = new StringWriter();
-		Communication.start("s|L\n  g\ndone",output,"127.0.0.1",6100);
-		System.out.println("output: " + output +"!");
-		String st = "p,h,l\np,h,q\n"
+		ConfigParser cp;
+		try {
+			cp = new ConfigParser("./resources/config.xml");
+			cp.getServerIp();
+			cp.getPort();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
