@@ -30,7 +30,9 @@ public class PipeGameDisplayer extends Canvas{
 		pipe0 = new SimpleStringProperty();
 		pipe1 = new SimpleStringProperty();
 		Background = new SimpleStringProperty();
-
+		picSuccess = new SimpleStringProperty();
+		picFail = new SimpleStringProperty();
+		picNoConnection = new SimpleStringProperty();
 	}
 	
 
@@ -44,8 +46,10 @@ public class PipeGameDisplayer extends Canvas{
 	private StringProperty pipe0;
 	private StringProperty pipe1;
 	private StringProperty Background;
-	Image background = null;
-	
+	private StringProperty picSuccess;
+	private StringProperty picFail;
+	private StringProperty picNoConnection;
+
 	public String covertGameToString()
 	{
 	    String s = "";
@@ -61,6 +65,7 @@ public class PipeGameDisplayer extends Canvas{
 	    return s.toString();
 	}
 	
+
 	public char getPipe(int x, int y) {
 		System.out.println("get pipe x: " + x + " y: " + y);
 		System.out.println(pipeBoard);
@@ -79,6 +84,30 @@ public class PipeGameDisplayer extends Canvas{
 
 	public void setBackground(String background) {
 		this.Background.set(background);
+	}
+
+	public String getPicNoConnection() {
+		return picNoConnection.get();
+	}
+
+	public void setPicNoConnection(String picNoConnection) {
+		this.picNoConnection.set(picNoConnection);
+	}
+	
+	public String getPicFail() {
+		return picFail.get();
+	}
+
+	public void setPicFail(String picFail) {
+		this.picFail.set(picFail);
+	}
+	
+	public String getPicSuccess() {
+		return picSuccess.get();
+	}
+
+	public void setPicSuccess(String picSuccess) {
+		this.picSuccess.set(picSuccess);
 	}
 	
 	public String getPipeJ() {
@@ -174,12 +203,64 @@ public class PipeGameDisplayer extends Canvas{
 		this.h = h;
 	}
 
+	
+	@Override
+  	public boolean isResizable() {
+      return true;
+    }
+	
+	public void redrawSuccess() throws FileNotFoundException, InterruptedException
+	{
+		System.out.println("redrawSuccess");
+		W = getWidth(); 
+		H = getHeight();
+		
+		GraphicsContext gc = getGraphicsContext2D();
+		
+		Image picSuccess = null;
+		picSuccess = new Image(new FileInputStream(picFileName.get()+this.picSuccess.get()));
+		System.out.println("redrawSuccess2");
+		gc.clearRect(0, 0, W, H);
+		gc.drawImage(picSuccess,0,0,W,H); 
+		System.out.println("redrawSuccess3");
+		Thread.sleep(1000);
+		System.out.println("redrawSuccess4");
+	}
+		
+	public void redrawFail() throws FileNotFoundException
+	{
+		W = getWidth(); 
+		H = getHeight();
+		
+		GraphicsContext gc = getGraphicsContext2D();
+			
+		Image picFail = null;
+		picFail = new Image(new FileInputStream(picFileName.get()+this.picFail.get()));
+		gc.clearRect(0, 0, W, H);
+		gc.drawImage(picFail,0,0,W,H); 
+				
+	}
+	
+	public void redrawNoConnection() throws FileNotFoundException
+	{
+		W = getWidth(); 
+		H = getHeight();
+		
+		GraphicsContext gc = getGraphicsContext2D();
+			
+		Image picNoConnection = null;
+		picNoConnection = new Image(new FileInputStream(picFileName.get()+this.picNoConnection.get()));
+		gc.clearRect(0, 0, W, H);
+		gc.drawImage(picNoConnection,0,0,W,H); 
+				
+	}
+	
 	public void redraw()
 	{
 		if (pipeBoard != null)
 		{
 			
-			W = getWidth();
+			W = getWidth(); 
 			H = getHeight();
 			w = W / pipeBoard[0].length;
 			h = H / pipeBoard.length;

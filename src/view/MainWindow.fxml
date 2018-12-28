@@ -39,7 +39,9 @@
    </top>
    <center>
       <!-- Canvas height="200.0" width="245.0" BorderPane.alignment="CENTER" /> -->
-      <PipeGameDisplayer fx:id="pipeDisplayer" height="200.0" width="200.0" BorderPane.alignment="CENTER" picFileName="./resources/Pipes/" pipes="pipes.jpg" pipeg="pipeg.jpg" pipe1="pipe1.jpg" pipe0="pipe0.jpg" pipe7="pipe7.jpg" pipeL="pipeL.jpg" pipeJ="pipeJ.jpg" pipeF="pipeF.jpg" Background="Background.png"/>
+      <PipeGameDisplayer fx:id="pipeDisplayer" height="200.0" width="200.0" BorderPane.alignment="CENTER" picFileName="./resources/Pipes/" pipes="pipes.jpg" pipeg="pipeg.jpg" 
+      pipe1="pipe1.jpg" pipe0="pipe0.jpg" pipe7="pipe7.jpg" pipeL="pipeL.jpg" pipeJ="pipeJ.jpg" pipeF="pipeF.jpg" 
+      picSuccess="Success.jpg" picFail="Fail.jpg" picNoConnection="Fail.jpg"/>
    </center>
    <bottom>
       <VBox BorderPane.alignment="CENTER">

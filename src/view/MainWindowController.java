@@ -23,12 +23,21 @@ import org.xml.sax.SAXException;
 
 import controller.Communication;
 import controller.ConfigParser;
+import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import model.clientGameModel;
 
 
@@ -56,6 +65,8 @@ public class MainWindowController implements Initializable{
 	ConfigParser CP = null;
 	
 	private Date startTime, submitTime;
+	Image background = null;
+	//background = new Image(new FileInputStream(pipeDisplayer.getPicFileName()+pipeDisplayer.getBackground()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -63,9 +74,8 @@ public class MainWindowController implements Initializable{
 		startTime = new Date();
 		timerLabel.setText("Timer: ");
 		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
-		
+		pipeDisplayer.isResizable();
 		pipeDisplayer.setPipeBoard(gameModel.getPipeBoard());
-		
 		pipeDisplayer.addEventFilter(MouseEvent.MOUSE_CLICKED, (e)->pipeDisplayer.requestFocus());
 		
 		pipeDisplayer.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -81,6 +91,7 @@ public class MainWindowController implements Initializable{
 				pipesRotation(x, y);
 				}
 	});
+		
 }
 	
 	private void pipesRotation(int x, int y)
@@ -130,17 +141,14 @@ public class MainWindowController implements Initializable{
 		default:
 			break;
 	}
-
-
 	}
 	
-	private void handleServerSolution(String s) throws InterruptedException
+	private void handleServerSolution(String s) throws InterruptedException, FileNotFoundException
 	{
 		if(s != null)
 		{
 			if (s.startsWith("done"))
 			{
-				System.out.println("WOHOOOO! :) ");
 				return;
 			}
 			
@@ -343,7 +351,13 @@ public class MainWindowController implements Initializable{
 		{
 			CP = new ConfigParser();
 		}
-		Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,CP.getServerIp(), CP.getPort());
+		int result = Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,CP.getServerIp(), CP.getPort());
+		System.out.println("result: " + result);
+		if (result == 0)
+		{
+			pipeDisplayer.redrawNoConnection();
+			System.out.println("no connection");
+		}
 	}
 	
 	public void Submit() throws InterruptedException, ParserConfigurationException, SAXException, IOException
@@ -353,11 +367,13 @@ public class MainWindowController implements Initializable{
 		System.out.println("input from server: " + inputFromServer.toString() + "!");
 		if (inputFromServer.toString().startsWith("done"))
 		{
+			pipeDisplayer.redrawSuccess();
 			System.out.println("WOHOOOO! :) ");
 			return;
 		}
 		else
 		{
+			pipeDisplayer.redrawFail();
 			System.out.println("Try again ");
 		}
 	}
@@ -365,7 +381,6 @@ public class MainWindowController implements Initializable{
 	public void Solve() throws InterruptedException, ParserConfigurationException, SAXException, IOException
 	{
 		connectToServer();
-		System.out.println("evg shaming: "+ inputFromServer.toString());
 		handleServerSolution(inputFromServer.toString());
 	}
 	
