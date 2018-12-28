@@ -29,9 +29,11 @@ public class PipeGameDisplayer extends Canvas{
 		pipeF = new SimpleStringProperty();
 		pipe0 = new SimpleStringProperty();
 		pipe1 = new SimpleStringProperty();
+		Background = new SimpleStringProperty();
 
 	}
 	
+
 	private StringProperty picFileName;
 	private StringProperty pipeg;
 	private StringProperty pipes;
@@ -41,6 +43,8 @@ public class PipeGameDisplayer extends Canvas{
 	private StringProperty pipeF;
 	private StringProperty pipe0;
 	private StringProperty pipe1;
+	private StringProperty Background;
+	Image background = null;
 	
 	public String covertGameToString()
 	{
@@ -67,6 +71,14 @@ public class PipeGameDisplayer extends Canvas{
 	{
 		return pipeBoard;
 		
+	}
+	
+	public String getBackground() {
+		return Background.get();
+	}
+
+	public void setBackground(String background) {
+		this.Background.set(background);
 	}
 	
 	public String getPipeJ() {
@@ -182,28 +194,24 @@ public class PipeGameDisplayer extends Canvas{
 			Image picJ = null;
 			Image pic7 = null;
 			Image picF = null;
+			
 
 			try {
-				System.out.println("1");
-				System.out.println(picFileName.get()+pipes.get());
 				pics = new Image(new FileInputStream(picFileName.get()+pipes.get()));
-				System.out.println("2");
+				pics = new Image(new FileInputStream(picFileName.get()+pipes.get()));
 				picg = new Image(new FileInputStream(picFileName.get()+pipeg.get()));				
-				System.out.println("3");
 				pic0 = new Image(new FileInputStream(picFileName.get()+pipe0.get()));
-				System.out.println("4");
 				pic1 = new Image(new FileInputStream(picFileName.get()+pipe1.get()));
-				System.out.println("5");
 				picL = new Image(new FileInputStream(picFileName.get()+pipeL.get()));
 				picJ = new Image(new FileInputStream(picFileName.get()+pipeJ.get()));
 				pic7 = new Image(new FileInputStream(picFileName.get()+pipe7.get()));
 				picF = new Image(new FileInputStream(picFileName.get()+pipeF.get()));
+				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 				
-			System.out.println(picFileName.get());
 			
 			gc.clearRect(0, 0, W, H);
 			char pipe;
@@ -304,7 +312,6 @@ public class PipeGameDisplayer extends Canvas{
 					
 					}
 				
-				System.out.println(pipeBoard.toString());
 			}
 		}
 	}
