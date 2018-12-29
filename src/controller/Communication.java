@@ -40,10 +40,9 @@ public class Communication {
 		catch (IOException e) { e.printStackTrace();} 
 		} 
 	
-	public static int start(String inputData,StringWriter outPutData,String ip, int port){ 
+	public static void start(String inputData,StringWriter outPutData,String ip, int port){ 
 		try { 
 			Socket theServer=new Socket(ip, port);
-			//theServer.setSoTimeout(100);
 			System.out.println("connected to server");
 			InputStream in = new ByteArrayInputStream(inputData.getBytes(StandardCharsets.UTF_8));
 			InputStreamReader isr = new InputStreamReader(in);
@@ -62,17 +61,13 @@ public class Communication {
 			outToScreen.close(); 
 			theServer.close();
 			System.out.println("connection close");
-			return 1;
 	} catch (UnknownHostException e) 
 		{
 			e.printStackTrace();
-			return 0;
 		} 
 		catch (IOException e) 
 		{
 			e.printStackTrace();
-			
-			return 0;
 		}
 	}
 	

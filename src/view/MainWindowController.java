@@ -351,13 +351,12 @@ public class MainWindowController implements Initializable{
 		{
 			CP = new ConfigParser();
 		}
-		int result = Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,CP.getServerIp(), CP.getPort());
-		System.out.println("result: " + result);
-		if (result == 0)
-		{
-			pipeDisplayer.redrawNoConnection();
-			System.out.println("no connection");
-		}
+		Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,CP.getServerIp(), CP.getPort());
+//		if (result == 0)
+//		{
+//			pipeDisplayer.redrawNoConnection();
+//			System.out.println("no connection");
+//		}
 	}
 	
 	public void Submit() throws InterruptedException, ParserConfigurationException, SAXException, IOException
