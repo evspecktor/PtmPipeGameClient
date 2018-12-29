@@ -20,7 +20,8 @@ public class PipeGameDisplayer extends Canvas{
 	
 	public PipeGameDisplayer()
 	{
-		picFileName = new SimpleStringProperty();
+		theme1Path = new SimpleStringProperty();
+		theme2Path = new SimpleStringProperty();
 		pipeg = new SimpleStringProperty();
 		pipes = new SimpleStringProperty();
 		pipe7 = new SimpleStringProperty();
@@ -33,10 +34,13 @@ public class PipeGameDisplayer extends Canvas{
 		picSuccess = new SimpleStringProperty();
 		picFail = new SimpleStringProperty();
 		picNoConnection = new SimpleStringProperty();
+		pipeEmpty = new SimpleStringProperty();
+
 	}
 	
 
-	private StringProperty picFileName;
+	private StringProperty theme1Path;
+	private StringProperty theme2Path;
 	private StringProperty pipeg;
 	private StringProperty pipes;
 	private StringProperty pipe7;
@@ -49,6 +53,10 @@ public class PipeGameDisplayer extends Canvas{
 	private StringProperty picSuccess;
 	private StringProperty picFail;
 	private StringProperty picNoConnection;
+	private StringProperty pipeEmpty;
+	
+	
+
 
 	public String covertGameToString()
 	{
@@ -108,6 +116,14 @@ public class PipeGameDisplayer extends Canvas{
 
 	public void setPicSuccess(String picSuccess) {
 		this.picSuccess.set(picSuccess);
+	}
+	
+	public String getPipeEmpty() {
+		return pipeEmpty.get();
+	}
+
+	public void setPipeEmpty(String pipeEmpty) {
+		this.pipeEmpty.set(pipeEmpty);
 	}
 	
 	public String getPipeJ() {
@@ -174,17 +190,24 @@ public class PipeGameDisplayer extends Canvas{
 		this.pipeg.set(pipeg);
 	}
 	
-	public String getPicFileName() {
-		return picFileName.get();
+	public String getTheme1Path() {
+		return theme1Path.get();
 	}
 
-	public void setPicFileName(String picFileName) {
-		this.picFileName.set(picFileName);
+	public void setTheme1Path(String theme1Path) {
+		this.theme1Path.set(theme1Path);
+	}
+	
+	public String getTheme2Path() {
+		return theme2Path.get();
+	}
+
+	public void setTheme2Path(String theme2Path) {
+		this.theme2Path.set(theme2Path);
 	}
 
 	public void setPipeBoard(char[][] pipeData) {
 		this.pipeBoard = pipeData;
-		redraw();
 	}
 	
 	public double getw() {
@@ -218,13 +241,10 @@ public class PipeGameDisplayer extends Canvas{
 		GraphicsContext gc = getGraphicsContext2D();
 		
 		Image picSuccess = null;
-		picSuccess = new Image(new FileInputStream(picFileName.get()+this.picSuccess.get()));
+		picSuccess = new Image(new FileInputStream(theme2Path.get()+this.picSuccess.get()));
 		System.out.println("redrawSuccess2");
 		gc.clearRect(0, 0, W, H);
-		gc.drawImage(picSuccess,0,0,W,H); 
-		System.out.println("redrawSuccess3");
-		Thread.sleep(1000);
-		System.out.println("redrawSuccess4");
+		gc.drawImage(picSuccess,0,0,W,H);
 	}
 		
 	public void redrawFail() throws FileNotFoundException
@@ -235,7 +255,7 @@ public class PipeGameDisplayer extends Canvas{
 		GraphicsContext gc = getGraphicsContext2D();
 			
 		Image picFail = null;
-		picFail = new Image(new FileInputStream(picFileName.get()+this.picFail.get()));
+		picFail = new Image(new FileInputStream(theme2Path.get()+this.picFail.get()));
 		gc.clearRect(0, 0, W, H);
 		gc.drawImage(picFail,0,0,W,H); 
 				
@@ -249,13 +269,13 @@ public class PipeGameDisplayer extends Canvas{
 		GraphicsContext gc = getGraphicsContext2D();
 			
 		Image picNoConnection = null;
-		picNoConnection = new Image(new FileInputStream(picFileName.get()+this.picNoConnection.get()));
+		picNoConnection = new Image(new FileInputStream(theme2Path.get()+this.picNoConnection.get()));
 		gc.clearRect(0, 0, W, H);
 		gc.drawImage(picNoConnection,0,0,W,H); 
 				
 	}
 	
-	public void redraw()
+	public void redraw(int chosenTheme)
 	{
 		if (pipeBoard != null)
 		{
@@ -275,24 +295,47 @@ public class PipeGameDisplayer extends Canvas{
 			Image picJ = null;
 			Image pic7 = null;
 			Image picF = null;
+			Image pipeEmpty = null;
 			
-
-			try {
-				pics = new Image(new FileInputStream(picFileName.get()+pipes.get()));
-				pics = new Image(new FileInputStream(picFileName.get()+pipes.get()));
-				picg = new Image(new FileInputStream(picFileName.get()+pipeg.get()));				
-				pic0 = new Image(new FileInputStream(picFileName.get()+pipe0.get()));
-				pic1 = new Image(new FileInputStream(picFileName.get()+pipe1.get()));
-				picL = new Image(new FileInputStream(picFileName.get()+pipeL.get()));
-				picJ = new Image(new FileInputStream(picFileName.get()+pipeJ.get()));
-				pic7 = new Image(new FileInputStream(picFileName.get()+pipe7.get()));
-				picF = new Image(new FileInputStream(picFileName.get()+pipeF.get()));
-				
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			switch (chosenTheme) {
+			case 1:
+				try {
+					pics = new Image(new FileInputStream(theme1Path.get()+pipes.get()));
+					pics = new Image(new FileInputStream(theme1Path.get()+pipes.get()));
+					picg = new Image(new FileInputStream(theme1Path.get()+pipeg.get()));				
+					pic0 = new Image(new FileInputStream(theme1Path.get()+pipe0.get()));
+					pic1 = new Image(new FileInputStream(theme1Path.get()+pipe1.get()));
+					picL = new Image(new FileInputStream(theme1Path.get()+pipeL.get()));
+					picJ = new Image(new FileInputStream(theme1Path.get()+pipeJ.get()));
+					pic7 = new Image(new FileInputStream(theme1Path.get()+pipe7.get()));
+					picF = new Image(new FileInputStream(theme1Path.get()+pipeF.get()));
+					pipeEmpty = new Image(new FileInputStream(theme1Path.get()+this.pipeEmpty.get()));
+					
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case 2:
+				try {
+					pics = new Image(new FileInputStream(theme2Path.get()+pipes.get()));
+					pics = new Image(new FileInputStream(theme2Path.get()+pipes.get()));
+					picg = new Image(new FileInputStream(theme2Path.get()+pipeg.get()));				
+					pic0 = new Image(new FileInputStream(theme2Path.get()+pipe0.get()));
+					pic1 = new Image(new FileInputStream(theme2Path.get()+pipe1.get()));
+					picL = new Image(new FileInputStream(theme2Path.get()+pipeL.get()));
+					picJ = new Image(new FileInputStream(theme2Path.get()+pipeJ.get()));
+					pic7 = new Image(new FileInputStream(theme2Path.get()+pipe7.get()));
+					picF = new Image(new FileInputStream(theme2Path.get()+pipeF.get()));
+					pipeEmpty = new Image(new FileInputStream(theme2Path.get()+this.pipeEmpty.get()));
+					
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			default:
+				break;
 			}
-				
 			
 			gc.clearRect(0, 0, W, H);
 			char pipe;
@@ -388,6 +431,14 @@ public class PipeGameDisplayer extends Canvas{
 						break;
 
 					default:
+						if (pipeEmpty == null)
+					{
+						gc.fillRect(w*j, h*i, w, h);
+					}
+					else
+					{
+						gc.drawImage(pipeEmpty, w*j, h*i, w, h); 
+					}
 						break;
 					}
 					

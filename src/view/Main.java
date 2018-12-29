@@ -24,21 +24,31 @@ public class Main extends Application {
 	@FXML
 	PipeGameDisplayer pipeDisplayerFxml;
 	public BorderPane root;
+	MainWindowController mwc;
+	Image image = null;
+	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-	    //BorderPane borderPane = new BorderPane();
 	    root = new BorderPane();
-	    //(BorderPane)FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
-	    Image image1 = new Image(new FileInputStream("./resources/Pipes/Background.png"));
+	    mwc = new MainWindowController();
+	    if (mwc.getChosenTheme() == 1)
+	    {
+	    	image = new Image(new FileInputStream("./resources/Theme1/Background.jpg"));
+
+	    }
+	    else
+	    {
+	    	image = new Image(new FileInputStream("./resources/Theme2/Background.jpg"));
+	    }
+	    
 	    BackgroundSize bSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false);
 
-	    root.setBackground(new Background(new BackgroundImage(image1,
+	    root.setBackground(new Background(new BackgroundImage(image,
 	            BackgroundRepeat.REPEAT,
 	            BackgroundRepeat.REPEAT,
 	            BackgroundPosition.CENTER,
 	            bSize)));
 	    root.setCenter((BorderPane)FXMLLoader.load(getClass().getResource("MainWindow.fxml")));
-
 	    
 	    Scene scene = new Scene(root,600,400);
 	    primaryStage.setScene(scene);

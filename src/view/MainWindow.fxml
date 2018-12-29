@@ -26,7 +26,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#ChooseTheme" text="Choose Theme..." />
+              <MenuItem mnemonicParsing="false" onAction="#changeTheme" text="Change Theme" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -39,8 +39,10 @@
    </top>
    <center>
       <!-- Canvas height="200.0" width="245.0" BorderPane.alignment="CENTER" /> -->
-      <PipeGameDisplayer fx:id="pipeDisplayer" height="300.0" width="450.0" BorderPane.alignment="CENTER" picFileName="./resources/Pipes/" pipes="pipes.jpg" pipeg="pipeg.jpg" 
-      pipe1="pipe1.jpg" pipe0="pipe0.jpg" pipe7="pipe7.jpg" pipeL="pipeL.jpg" pipeJ="pipeJ.jpg" pipeF="pipeF.jpg" 
+      <PipeGameDisplayer fx:id="pipeDisplayer" height="300.0" width="450.0"
+      BorderPane.alignment="CENTER" theme1Path="./resources/Theme1/" theme2Path="./resources/Theme2/" 
+      pipes="pipes.jpg" pipeg="pipeg.jpg" pipe1="pipe1.jpg" pipe0="pipe0.jpg" pipe7="pipe7.jpg" 
+      pipeL="pipeL.jpg" pipeJ="pipeJ.jpg" pipeF="pipeF.jpg" pipeEmpty="pipeEmpty.jpg"
       picSuccess="Success.jpg" picFail="Fail.jpg" picNoConnection="Fail.jpg"/>
    </center>
    <bottom>

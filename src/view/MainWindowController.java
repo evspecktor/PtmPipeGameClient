@@ -23,21 +23,12 @@ import org.xml.sax.SAXException;
 
 import controller.Communication;
 import controller.ConfigParser;
-import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import model.clientGameModel;
 
 
@@ -65,8 +56,8 @@ public class MainWindowController implements Initializable{
 	ConfigParser CP = null;
 	
 	private Date startTime, submitTime;
-	Image background = null;
-	//background = new Image(new FileInputStream(pipeDisplayer.getPicFileName()+pipeDisplayer.getBackground()));
+
+	private static int chosenTheme = 1;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -74,8 +65,7 @@ public class MainWindowController implements Initializable{
 		startTime = new Date();
 		timerLabel.setText("Timer: ");
 		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
-		pipeDisplayer.isResizable();
-		pipeDisplayer.setPipeBoard(gameModel.getPipeBoard());
+		setPipeBoard(gameModel.getPipeBoard());
 		pipeDisplayer.addEventFilter(MouseEvent.MOUSE_CLICKED, (e)->pipeDisplayer.requestFocus());
 		
 		pipeDisplayer.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -90,9 +80,32 @@ public class MainWindowController implements Initializable{
 				
 				pipesRotation(x, y);
 				}
+			
 	});
 		
 }
+
+
+	public int getChosenTheme() {
+		return chosenTheme;
+	}
+
+	public void changeTheme() {
+		if(chosenTheme == 1)
+			setChosenTheme(2);
+		else
+			setChosenTheme(1);
+	}
+	
+	public void setChosenTheme(int chosenTheme) {
+		this.chosenTheme = chosenTheme;
+		pipeDisplayer.redraw(chosenTheme);
+	}
+		
+	public void setPipeBoard(char[][] pipeData) {
+		pipeDisplayer.setPipeBoard(pipeData);
+		pipeDisplayer.redraw(this.chosenTheme);
+		}
 	
 	private void pipesRotation(int x, int y)
 	{
@@ -107,22 +120,22 @@ public class MainWindowController implements Initializable{
 			break;
 		case 'L':
 			pipeDisplayer.pipeBoard[x][y] = 'F';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;
 		case 'F':
 			pipeDisplayer.pipeBoard[x][y] = '7';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;
 		case '7':
 			pipeDisplayer.pipeBoard[x][y] = 'J';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;
 		case 'J':
 			pipeDisplayer.pipeBoard[x][y] = 'L';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;
 		case 'g':
@@ -130,12 +143,12 @@ public class MainWindowController implements Initializable{
 			break;
 		case '-':
 			pipeDisplayer.pipeBoard[x][y] = '|';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;	
 		case '|':
 			pipeDisplayer.pipeBoard[x][y] = '-';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;		
 		default:
@@ -196,7 +209,7 @@ public class MainWindowController implements Initializable{
 		System.out.println("redrawAllGame - stepsCounter = " + stepsCounter + "Time = " + Time );
 		setStepsCounter(stepsCounter);
 		setTime(Time);
-		pipeDisplayer.setPipeBoard(pipeGame);
+		setPipeBoard(pipeGame);
 	}
 	
 	private void setTime()
@@ -227,7 +240,7 @@ public class MainWindowController implements Initializable{
 
 			gameModel = new clientGameModel(setPipesIntoArray(buf));
 			
-			pipeDisplayer.setPipeBoard(gameModel.getPipeBoard());
+			setPipeBoard(gameModel.getPipeBoard());
 		}
 	}
 	
@@ -336,11 +349,6 @@ public class MainWindowController implements Initializable{
 		{
 			CP = new ConfigParser(chosen);
 		}
-		
-	}
-	
-	public void ChooseTheme()
-	{
 		
 	}
 	
