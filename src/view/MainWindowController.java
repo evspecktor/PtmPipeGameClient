@@ -16,6 +16,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -40,12 +42,6 @@ public class MainWindowController implements Initializable{
 			{' ','F','-','J'},
 			{' ','L','-','g'}
 	};
-	private char[][] buDefaultPipeData= {
-			{'s','-','-','7'},
-			{' ',' ',' ','|'},
-			{' ','F','-','J'},
-			{' ','L','-','g'}
-	};
 	
 	clientGameModel gameModel = new clientGameModel(defaultPipeData);
 	
@@ -57,7 +53,7 @@ public class MainWindowController implements Initializable{
 	private Label timerLabel;
 	
 	private StringWriter inputFromServer = null;
-	
+	//private boolean onGame = true;
 	
 	ConfigParser CP = null;
 	
@@ -78,19 +74,23 @@ public class MainWindowController implements Initializable{
 
 			@Override
 			public void handle(MouseEvent event) {
-				int y = (int)event.getX();
-				int x = (int)event.getY();
-				
-				y = y / (int)pipeDisplayer.getw(); 
-				x = x / (int)pipeDisplayer.geth();
-				
-				pipesRotation(x, y);
-				}
-			
+				if (pipeDisplayer.onGame)
+						{				
+							int y = (int)event.getX();
+							int x = (int)event.getY();
+							
+							y = y / (int)pipeDisplayer.getw(); 
+							x = x / (int)pipeDisplayer.geth();
+							
+							if (pipesRotation(x, y))
+								setStepsCounter();
+						}
+				else
+					pipeDisplayer.redraw(getChosenTheme());
+					}
 	});
 		
 }
-
 
 	public int getChosenTheme() {
 		return chosenTheme;
@@ -113,57 +113,64 @@ public class MainWindowController implements Initializable{
 		pipeDisplayer.redraw(this.chosenTheme);
 		}
 	
-	private void pipesRotation(int x, int y)
+	private boolean pipesRotation(int x, int y)
 	{
 		System.out.println("--inside pipesRotation--");
 		char PipeType = pipeDisplayer.getPipe(x, y);
 		
+		boolean result = true;
 		System.out.println("PipeType: " + PipeType);
 		
 		switch (PipeType) {
 		case 's':
 			pipeDisplayer.pipeBoard[x][y] = 's';
+			result = false;
 			break;
 		case 'L':
 			pipeDisplayer.pipeBoard[x][y] = 'F';
 			pipeDisplayer.redraw(this.chosenTheme);
-			setStepsCounter();
+			//setStepsCounter();
 			break;
 		case 'F':
 			pipeDisplayer.pipeBoard[x][y] = '7';
 			pipeDisplayer.redraw(this.chosenTheme);
-			setStepsCounter();
+			//setStepsCounter();
 			break;
 		case '7':
 			pipeDisplayer.pipeBoard[x][y] = 'J';
 			pipeDisplayer.redraw(this.chosenTheme);
-			setStepsCounter();
+			//setStepsCounter();
 			break;
 		case 'J':
 			pipeDisplayer.pipeBoard[x][y] = 'L';
 			pipeDisplayer.redraw(this.chosenTheme);
-			setStepsCounter();
+			//setStepsCounter();
 			break;
 		case 'g':
 			pipeDisplayer.pipeBoard[x][y] = 'g';
+			result = false;
 			break;
 		case '-':
 			pipeDisplayer.pipeBoard[x][y] = '|';
 			pipeDisplayer.redraw(this.chosenTheme);
-			setStepsCounter();
+			//setStepsCounter();
 			break;	
 		case '|':
 			pipeDisplayer.pipeBoard[x][y] = '-';
 			pipeDisplayer.redraw(this.chosenTheme);
-			setStepsCounter();
+			//setStepsCounter();
 			break;		
 		default:
+			result = false;
 			break;
 	}
+		return result;
 	}
 	
 	private void handleServerSolution(String s) throws InterruptedException, FileNotFoundException
 	{
+		ExecutorService exec = Executors.newSingleThreadExecutor();
+		
 		if(s != null)
 		{
 			if (s.startsWith("done"))
@@ -185,9 +192,17 @@ public class MainWindowController implements Initializable{
 					System.out.println("x: "+ x + "y: " + y + "rotationCount " + rotationCount);
 					for (int i = 0; i < rotationCount; i ++)
 					{
+						int steps = i+1;
 						System.out.println("i: " + i );
-						pipesRotation(x,y);
-						Thread.sleep(10);
+						exec.execute(()->{
+							try {
+								Thread.sleep(50*(steps+1));
+								pipesRotation(x,y);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						});		
 					}
 			
 				}
@@ -212,8 +227,12 @@ public class MainWindowController implements Initializable{
 	
 	public void resetGame()
 	{
-		char[][] newPipeData= new char[4][4];
-		//newPipeData = buDefaultPipeData.clone();
+		char[][] newPipeData= {
+				{'s','-','-','7'},
+				{' ',' ',' ','|'},
+				{' ','F','-','J'},
+				{' ','L','-','g'}
+		};
 		
 		redrawAllGame(0,0,newPipeData);
 	}
@@ -379,11 +398,6 @@ public class MainWindowController implements Initializable{
 			CP = new ConfigParser();
 		}
 		Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,CP.getServerIp(), CP.getPort());
-//		if (result == 0)
-//		{
-//			pipeDisplayer.redrawNoConnection();
-//			System.out.println("no connection");
-//		}
 	}
 	
 	public void Submit() throws InterruptedException, ParserConfigurationException, SAXException, IOException
@@ -394,6 +408,7 @@ public class MainWindowController implements Initializable{
 		if (inputFromServer.toString().startsWith("done"))
 		{
 			pipeDisplayer.redrawSuccess();
+			
 			System.out.println("WOHOOOO! :) ");
 			return;
 		}

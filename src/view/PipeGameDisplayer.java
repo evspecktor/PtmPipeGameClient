@@ -18,6 +18,8 @@ public class PipeGameDisplayer extends Canvas{
 	
 	double h,H,W,w;
 	
+	boolean onGame = true;
+	
 	public PipeGameDisplayer()
 	{
 		theme1Path = new SimpleStringProperty();
@@ -245,6 +247,7 @@ public class PipeGameDisplayer extends Canvas{
 		System.out.println("redrawSuccess2");
 		gc.clearRect(0, 0, W, H);
 		gc.drawImage(picSuccess,0,0,W,H);
+		onGame = false;
 	}
 		
 	public void redrawFail() throws FileNotFoundException
@@ -258,7 +261,7 @@ public class PipeGameDisplayer extends Canvas{
 		picFail = new Image(new FileInputStream(theme2Path.get()+this.picFail.get()));
 		gc.clearRect(0, 0, W, H);
 		gc.drawImage(picFail,0,0,W,H); 
-				
+		onGame = false;		
 	}
 	
 	public void redrawNoConnection() throws FileNotFoundException
@@ -272,11 +275,12 @@ public class PipeGameDisplayer extends Canvas{
 		picNoConnection = new Image(new FileInputStream(theme2Path.get()+this.picNoConnection.get()));
 		gc.clearRect(0, 0, W, H);
 		gc.drawImage(picNoConnection,0,0,W,H); 
-				
+		onGame = false;
 	}
 	
 	public void redraw(int chosenTheme)
 	{
+		onGame = true;
 		if (pipeBoard != null)
 		{
 			
