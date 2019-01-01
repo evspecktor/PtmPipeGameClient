@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.SystemColor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +17,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -23,7 +26,9 @@ import org.xml.sax.SAXException;
 
 import controller.Communication;
 import controller.ConfigParser;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +43,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.clientGameModel;
 
 
@@ -71,6 +77,7 @@ public class MainWindowController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
+
 		startTime = new Date();
 		timerLabel.setText("Timer: ");
 		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
@@ -88,63 +95,76 @@ public class MainWindowController implements Initializable{
 				y = y / (int)pipeDisplayer.getw(); 
 				x = x / (int)pipeDisplayer.geth();
 				
-				pipesRotation(x, y);
+				if (pipesRotation(x, y))
+				{
+					setStepsCounter();
 				}
+				
+			}
 	});
 		
 }
 	
-	private void pipesRotation(int x, int y)
+	private boolean pipesRotation(int x, int y)
 	{
 		System.out.println("--inside pipesRotation--");
 		char PipeType = pipeDisplayer.getPipe(x, y);
-		
+		boolean result = true; 
 		System.out.println("PipeType: " + PipeType);
 		
 		switch (PipeType) {
 		case 's':
 			pipeDisplayer.pipeBoard[x][y] = 's';
+			result = false;
 			break;
 		case 'L':
 			pipeDisplayer.pipeBoard[x][y] = 'F';
 			pipeDisplayer.redraw();
-			setStepsCounter();
+			//setStepsCounter();
 			break;
 		case 'F':
 			pipeDisplayer.pipeBoard[x][y] = '7';
 			pipeDisplayer.redraw();
-			setStepsCounter();
+			//setStepsCounter();
 			break;
 		case '7':
 			pipeDisplayer.pipeBoard[x][y] = 'J';
 			pipeDisplayer.redraw();
-			setStepsCounter();
+			//setStepsCounter();
 			break;
 		case 'J':
 			pipeDisplayer.pipeBoard[x][y] = 'L';
 			pipeDisplayer.redraw();
-			setStepsCounter();
+			//setStepsCounter();
 			break;
 		case 'g':
 			pipeDisplayer.pipeBoard[x][y] = 'g';
+			result = false;
 			break;
 		case '-':
 			pipeDisplayer.pipeBoard[x][y] = '|';
 			pipeDisplayer.redraw();
-			setStepsCounter();
+			//setStepsCounter();
 			break;	
 		case '|':
 			pipeDisplayer.pipeBoard[x][y] = '-';
 			pipeDisplayer.redraw();
-			setStepsCounter();
+			//setStepsCounter();
 			break;		
 		default:
+			result = false;
 			break;
 	}
+		return result;
 	}
 	
 	private void handleServerSolution(String s) throws InterruptedException, FileNotFoundException
 	{
+//		ExecutorService exec = Executors.newFixedThreadPool(6);
+		ExecutorService exec = Executors.newSingleThreadExecutor();
+//		if(Platform.isFxApplicationThread()) {
+//			System.out.println("fx application threead");
+//		}
 		if(s != null)
 		{
 			if (s.startsWith("done"))
@@ -164,11 +184,19 @@ public class MainWindowController implements Initializable{
 					int rotationCount = Integer.parseInt(line.split(",")[2]);
 					
 					System.out.println("x: "+ x + "y: " + y + "rotationCount " + rotationCount);
-					for (int i = 0; i < rotationCount; i ++)
+					for (int i = 0; i < rotationCount; i++)
 					{
+						int steps = i+1;
 						System.out.println("i: " + i );
-						pipesRotation(x,y);
-						Thread.sleep(10);
+						exec.execute(()->{
+							try {
+								Thread.sleep(50*(steps+1));
+								pipesRotation(x,y);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						});						
 					}
 			
 				}
