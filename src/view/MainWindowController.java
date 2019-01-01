@@ -40,6 +40,12 @@ public class MainWindowController implements Initializable{
 			{' ','F','-','J'},
 			{' ','L','-','g'}
 	};
+	private char[][] buDefaultPipeData= {
+			{'s','-','-','7'},
+			{' ',' ',' ','|'},
+			{' ','F','-','J'},
+			{' ','L','-','g'}
+	};
 	
 	clientGameModel gameModel = new clientGameModel(defaultPipeData);
 	
@@ -202,6 +208,19 @@ public class MainWindowController implements Initializable{
 	{
 		gameModel.setStepsCounter(x);
 		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
+	}
+	
+	public void resetGame()
+	{
+		char[][] newPipeData= new char[4][4];
+		//newPipeData = buDefaultPipeData.clone();
+		
+		redrawAllGame(0,0,newPipeData);
+	}
+	
+	public void continueGame()
+	{
+		pipeDisplayer.redraw(chosenTheme);
 	}
 	
 	private void redrawAllGame(int stepsCounter, long Time, char[][] pipeGame)

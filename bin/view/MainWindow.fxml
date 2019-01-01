@@ -29,9 +29,10 @@
               <MenuItem mnemonicParsing="false" onAction="#changeTheme" text="Change Theme" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="Play">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#resetGame"  text="Play again" />
+              <MenuItem mnemonicParsing="false" onAction="#continueGame"  text="Continue play" />
             </items>
           </Menu>
         </menus>
