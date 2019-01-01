@@ -40,6 +40,12 @@ public class MainWindowController implements Initializable{
 			{' ','F','-','J'},
 			{' ','L','-','g'}
 	};
+	private char[][] buDefaultPipeData= {
+			{'s','-','-','7'},
+			{' ',' ',' ','|'},
+			{' ','F','-','J'},
+			{' ','L','-','g'}
+	};
 	
 	clientGameModel gameModel = new clientGameModel(defaultPipeData);
 	
@@ -56,6 +62,8 @@ public class MainWindowController implements Initializable{
 	ConfigParser CP = null;
 	
 	private Date startTime, submitTime;
+
+	private static int chosenTheme = 1;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -63,9 +71,7 @@ public class MainWindowController implements Initializable{
 		startTime = new Date();
 		timerLabel.setText("Timer: ");
 		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
-		
-		pipeDisplayer.setPipeBoard(gameModel.getPipeBoard());
-		
+		setPipeBoard(gameModel.getPipeBoard());
 		pipeDisplayer.addEventFilter(MouseEvent.MOUSE_CLICKED, (e)->pipeDisplayer.requestFocus());
 		
 		pipeDisplayer.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -80,8 +86,32 @@ public class MainWindowController implements Initializable{
 				
 				pipesRotation(x, y);
 				}
+			
 	});
+		
 }
+
+
+	public int getChosenTheme() {
+		return chosenTheme;
+	}
+
+	public void changeTheme() {
+		if(chosenTheme == 1)
+			setChosenTheme(2);
+		else
+			setChosenTheme(1);
+	}
+	
+	public void setChosenTheme(int chosenTheme) {
+		this.chosenTheme = chosenTheme;
+		pipeDisplayer.redraw(chosenTheme);
+	}
+		
+	public void setPipeBoard(char[][] pipeData) {
+		pipeDisplayer.setPipeBoard(pipeData);
+		pipeDisplayer.redraw(this.chosenTheme);
+		}
 	
 	private void pipesRotation(int x, int y)
 	{
@@ -96,22 +126,22 @@ public class MainWindowController implements Initializable{
 			break;
 		case 'L':
 			pipeDisplayer.pipeBoard[x][y] = 'F';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;
 		case 'F':
 			pipeDisplayer.pipeBoard[x][y] = '7';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;
 		case '7':
 			pipeDisplayer.pipeBoard[x][y] = 'J';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;
 		case 'J':
 			pipeDisplayer.pipeBoard[x][y] = 'L';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;
 		case 'g':
@@ -119,28 +149,25 @@ public class MainWindowController implements Initializable{
 			break;
 		case '-':
 			pipeDisplayer.pipeBoard[x][y] = '|';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;	
 		case '|':
 			pipeDisplayer.pipeBoard[x][y] = '-';
-			pipeDisplayer.redraw();
+			pipeDisplayer.redraw(this.chosenTheme);
 			setStepsCounter();
 			break;		
 		default:
 			break;
 	}
-
-
 	}
 	
-	private void handleServerSolution(String s) throws InterruptedException
+	private void handleServerSolution(String s) throws InterruptedException, FileNotFoundException
 	{
 		if(s != null)
 		{
 			if (s.startsWith("done"))
 			{
-				System.out.println("WOHOOOO! :) ");
 				return;
 			}
 			
@@ -183,12 +210,25 @@ public class MainWindowController implements Initializable{
 		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
 	}
 	
+	public void resetGame()
+	{
+		char[][] newPipeData= new char[4][4];
+		//newPipeData = buDefaultPipeData.clone();
+		
+		redrawAllGame(0,0,newPipeData);
+	}
+	
+	public void continueGame()
+	{
+		pipeDisplayer.redraw(chosenTheme);
+	}
+	
 	private void redrawAllGame(int stepsCounter, long Time, char[][] pipeGame)
 	{
 		System.out.println("redrawAllGame - stepsCounter = " + stepsCounter + "Time = " + Time );
 		setStepsCounter(stepsCounter);
 		setTime(Time);
-		pipeDisplayer.setPipeBoard(pipeGame);
+		setPipeBoard(pipeGame);
 	}
 	
 	private void setTime()
@@ -219,7 +259,7 @@ public class MainWindowController implements Initializable{
 
 			gameModel = new clientGameModel(setPipesIntoArray(buf));
 			
-			pipeDisplayer.setPipeBoard(gameModel.getPipeBoard());
+			setPipeBoard(gameModel.getPipeBoard());
 		}
 	}
 	
@@ -331,11 +371,6 @@ public class MainWindowController implements Initializable{
 		
 	}
 	
-	public void ChooseTheme()
-	{
-		
-	}
-	
 	private void connectToServer() throws ParserConfigurationException, SAXException, IOException
 	{
 		inputFromServer = new StringWriter();
@@ -344,6 +379,11 @@ public class MainWindowController implements Initializable{
 			CP = new ConfigParser();
 		}
 		Communication.start(pipeDisplayer.covertGameToString(),inputFromServer,CP.getServerIp(), CP.getPort());
+//		if (result == 0)
+//		{
+//			pipeDisplayer.redrawNoConnection();
+//			System.out.println("no connection");
+//		}
 	}
 	
 	public void Submit() throws InterruptedException, ParserConfigurationException, SAXException, IOException
@@ -353,11 +393,13 @@ public class MainWindowController implements Initializable{
 		System.out.println("input from server: " + inputFromServer.toString() + "!");
 		if (inputFromServer.toString().startsWith("done"))
 		{
+			pipeDisplayer.redrawSuccess();
 			System.out.println("WOHOOOO! :) ");
 			return;
 		}
 		else
 		{
+			pipeDisplayer.redrawFail();
 			System.out.println("Try again ");
 		}
 	}
@@ -365,7 +407,6 @@ public class MainWindowController implements Initializable{
 	public void Solve() throws InterruptedException, ParserConfigurationException, SAXException, IOException
 	{
 		connectToServer();
-		System.out.println("evg shaming: "+ inputFromServer.toString());
 		handleServerSolution(inputFromServer.toString());
 	}
 	

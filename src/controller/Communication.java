@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 
@@ -41,7 +42,7 @@ public class Communication {
 	
 	public static void start(String inputData,StringWriter outPutData,String ip, int port){ 
 		try { 
-			Socket theServer=new Socket(ip, port); 
+			Socket theServer=new Socket(ip, port);
 			System.out.println("connected to server");
 			InputStream in = new ByteArrayInputStream(inputData.getBytes(StandardCharsets.UTF_8));
 			InputStreamReader isr = new InputStreamReader(in);
@@ -59,8 +60,17 @@ public class Communication {
 			outToServer.close(); 
 			outToScreen.close(); 
 			theServer.close();
-	} catch (UnknownHostException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();} 
+			System.out.println("connection close");
+	} catch (UnknownHostException e) 
+		{
+			e.printStackTrace();
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 	}
+	
 	
 	public static void main(String args[]) throws UnknownHostException{
 		long timePassed = 10;
