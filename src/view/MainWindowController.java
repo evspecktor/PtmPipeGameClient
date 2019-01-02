@@ -30,6 +30,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import model.clientGameModel;
 
@@ -63,13 +65,17 @@ public class MainWindowController implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+		ExecutorService exec = Executors.newSingleThreadExecutor();
 		startTime = new Date();
 		timerLabel.setText("Timer: ");
 		stepsLabel.setText("Steps: " + gameModel.getStepsCounter());
 		setPipeBoard(gameModel.getPipeBoard());
 		pipeDisplayer.addEventFilter(MouseEvent.MOUSE_CLICKED, (e)->pipeDisplayer.requestFocus());
-		
+		System.out.println("first play song");
+//		playSong(1);
+		exec.execute(()->{
+			playSong(chosenTheme);
+			});
 		pipeDisplayer.setOnMousePressed(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -97,17 +103,55 @@ public class MainWindowController implements Initializable{
 	}
 
 	public void changeTheme() {
-		if(chosenTheme == 1)
+		ExecutorService exec = Executors.newSingleThreadExecutor();
+		if(chosenTheme == 1) {
+			System.out.println("im in schosen1");
 			setChosenTheme(2);
-		else
+			exec.execute(()->{
+				playSong(1);
+				});
+			
+		}
+		else 
+		{
+			System.out.println("im in schosen2");
 			setChosenTheme(1);
+			exec.shutdownNow();
+			exec.execute(()->{
+				playSong(2);
+				});
+			
+		}
+	}
+	
+	public void playSong(int songID) {
+		System.out.println("play song");
+		MediaPlayer mediaPlayer1,mediaPlayer2;
+		String musicFile = "./resources/Theme1/song1.mp3";     // For example
+		String musicFile2 = "./resources/Theme2/song2.mp3";     // For example
+    	Media sound = new Media(new File(musicFile).toURI().toString());
+    	Media sound2 = new Media(new File(musicFile2).toURI().toString());
+    	mediaPlayer1 = new MediaPlayer(sound);
+    	mediaPlayer2 = new MediaPlayer(sound2);
+    	if (songID == 1){
+    		System.out.println("im in songid1");
+    		mediaPlayer2.stop();
+        	mediaPlayer1.play();
+    	}
+    	else {
+    		System.out.println("im in songid2");
+    		mediaPlayer1.stop();
+        	mediaPlayer2.play();
+    	}
+    	
 	}
 	
 	public void setChosenTheme(int chosenTheme) {
 		this.chosenTheme = chosenTheme;
 		pipeDisplayer.redraw(chosenTheme);
 	}
-		
+	
+	
 	public void setPipeBoard(char[][] pipeData) {
 		pipeDisplayer.setPipeBoard(pipeData);
 		pipeDisplayer.redraw(this.chosenTheme);
